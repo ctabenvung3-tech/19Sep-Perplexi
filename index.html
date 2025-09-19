@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<!-- saved from url=(0152)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/a4acd76015ea36ff5687c35590c8dd04/39980f3b-3a27-4caf-8743-d97a30ecc977/index.html -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo Sát Thông Tin Môi Trường Doanh Nghiệp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="survey-header">
+            <div class="container">
+                <h1>KHẢO SÁT THÔNG TIN MÔI TRƯỜNG DOANH NGHIỆP</h1>
+                <p class="survey-subtitle">Chúng tôi cam kết chỉ sử dụng thông tin cho mục đích nghiên cứu khoa học</p>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="step active" data-step="1">A</div>
+                        <div class="step" data-step="2">B1</div>
+                        <div class="step" data-step="3">B2</div>
+                        <div class="step" data-step="4">C</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Survey Container -->
+        <main class="survey-container">
+            <div class="container">
+                <div class="survey-wrapper">
+                    <!-- Form A: Thông tin chung -->
+                    <div class="survey-form active" id="formA" data-form="A" style="display: block;">
+                        <div class="card">
+                            <div class="card__header">
+                                <h2>PHẦN A - THÔNG TIN CHUNG</h2>
+                                <p>Thông tin cơ bản về doanh nghiệp</p>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-group">
+                                    <label class="form-label" for="company_name">Tên doanh nghiệp *</label>
+                                    <input type="text" id="company_name" class="form-control" required="">
+                                    <div class="error-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="address">Địa chỉ *</label>
+                                    <textarea id="address" class="form-control" rows="3" required=""></textarea>
+                                    <div class="error-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="business_type">Ngành nghề sản xuất chính</label>
+                                    <input type="text" id="business_type" class="form-control" placeholder="VD: Điện tử, may mặc...">
+                                    <div class="error-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Vốn điều lệ *</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="capital" value="Dưới 3 tỷ" required="">
+                                            <span>Dưới 3 tỷ</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="capital" value="Từ 3 đến dưới 20 tỷ" required="">
+                                            <span>Từ 3 đến dưới 20 tỷ</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="capital" value="Từ 20 đến dưới 100 tỷ" required="">
+                                            <span>Từ 20 đến dưới 100 tỷ</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="capital" value="Trên 100 tỷ" required="">
+                                            <span>Trên 100 tỷ</span>
+                                        </label>
+                                    </div>
+                                    <div class="error-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="employees">Quy mô lao động (người)</label>
+                                    <input type="number" id="employees" class="form-control" min="1">
+                                    <div class="error-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="factory_area">Diện tích nhà xưởng sản xuất (m²)</label>
+                                    <input type="number" id="factory_area" class="form-control" min="1">
+                                    <div class="error-message"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Loại hình doanh nghiệp *</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item">
+                                            <input type="radio" name="company_type" value="Doanh nghiệp nhà nước" required="">
+                                            <span>Doanh nghiệp nhà nước (Nhà nước nắm giữ trên 50% vốn điều lệ)</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="company_type" value="Doanh nghiệp FDI" required="">
+                                            <span>Doanh nghiệp FDI (DN có nhà đầu tư nước ngoài)</span>
+                                        </label>
+                                        <label class="radio-item">
+                                            <input type="radio" name="company_type" value="Doanh nghiệp ngoài nhà nước trong nước" required="">
+                                            <span>Doanh nghiệp ngoài nhà nước trong nước</span>
+                                        </label>
+                                    </div>
+                                    <div class="error-message"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form B1: Chất thải rắn sinh hoạt -->
+                    <div class="survey-form" id="formB1" data-form="B1" style="display: none;">
+                        <div class="card">
+                            <div class="card__header">
+                                <h2>PHẦN B1 - HIỆN TRẠNG PHÁT SINH CHẤT THẢI SINH HOẠT</h2>
+                                <p>Thông tin về chất thải rắn sinh hoạt</p>
+                            </div>
+                            <div class="card__body">
+                                <div class="table-controls">
+                                    <button type="button" class="btn btn--secondary btn--sm" onclick="addTableRow(&#39;wasteTable&#39;)">
+                                        Thêm dòng
+                                    </button>
+                                    <button type="button" class="btn btn--outline btn--sm" onclick="removeTableRow(&#39;wasteTable&#39;)">
+                                        Xóa dòng cuối
+                                    </button>
+                                </div>
+                                
+                                <div class="table-container">
+                                    <table class="data-table" id="wasteTable">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên chất thải rắn sinh hoạt</th>
+                                                <th>Khối lượng 2023 (kg/năm)</th>
+                                                <th>Khối lượng 2024 (kg/năm)</th>
+                                                <th>Khối lượng 6 tháng đầu 2025 (kg)</th>
+                                                <th>Tổ chức/cá nhân tiếp nhận</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-row="1">
+                                                <td>1</td>
+                                                <td><input type="text" class="form-control table-input" name="waste_name_1"></td>
+                                                <td><input type="number" class="form-control table-input calc-input" name="waste_2023_1" min="0" step="0.01"></td>
+                                                <td><input type="number" class="form-control table-input calc-input" name="waste_2024_1" min="0" step="0.01"></td>
+                                                <td><input type="number" class="form-control table-input calc-input" name="waste_2025_1" min="0" step="0.01"></td>
+                                                <td><input type="text" class="form-control table-input" name="waste_receiver_1"></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="total-row">
+                                                <td colspan="2"><strong>Tổng cộng</strong></td>
+                                                <td><strong id="total_2023_b1">0,00</strong></td>
+                                                <td><strong id="total_2024_b1">0,00</strong></td>
+                                                <td><strong id="total_2025_b1">0,00</strong></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form B2: Chất thải rắn công nghiệp -->
+                    <div class="survey-form" id="formB2" data-form="B2" style="display: none;">
+                        <div class="card">
+                            <div class="card__header">
+                                <h2>PHẦN B2 - CHẤT THẢI RẮN CÔNG NGHIỆP THÔNG THƯỜNG</h2>
+                                <p>Thông tin về chất thải rắn công nghiệp</p>
+                            </div>
+                            <div class="card__body">
+                                <!-- Subsection I -->
+                                <div class="subsection">
+                                    <h3>I. Sử dụng trực tiếp làm nguyên liệu</h3>
+                                    <div class="table-controls">
+                                        <button type="button" class="btn btn--secondary btn--sm" onclick="addTableRow(&#39;industrialTable1&#39;)">
+                                            Thêm dòng
+                                        </button>
+                                        <button type="button" class="btn btn--outline btn--sm" onclick="removeTableRow(&#39;industrialTable1&#39;)">
+                                            Xóa dòng cuối
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="table-container">
+                                        <table class="data-table" id="industrialTable1">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Tên chất thải</th>
+                                                    <th>Khối lượng 2023 (kg/năm)</th>
+                                                    <th>Khối lượng 2024 (kg/năm)</th>
+                                                    <th>Khối lượng 6 tháng đầu 2025 (kg)</th>
+                                                    <th>Tổ chức/cá nhân tiếp nhận</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-row="1">
+                                                    <td>1</td>
+                                                    <td><input type="text" class="form-control table-input" name="ind1_name_1"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind1_2023_1" min="0" step="0.01"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind1_2024_1" min="0" step="0.01"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind1_2025_1" min="0" step="0.01"></td>
+                                                    <td><input type="text" class="form-control table-input" name="ind1_receiver_1"></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="total-row">
+                                                    <td colspan="2"><strong>Tổng cộng</strong></td>
+                                                    <td><strong id="total_2023_ind1">0,00</strong></td>
+                                                    <td><strong id="total_2024_ind1">0,00</strong></td>
+                                                    <td><strong id="total_2025_ind1">0,00</strong></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Subsection II -->
+                                <div class="subsection">
+                                    <h3>II. Tái sử dụng, tái chế</h3>
+                                    <div class="table-controls">
+                                        <button type="button" class="btn btn--secondary btn--sm" onclick="addTableRow(&#39;industrialTable2&#39;)">
+                                            Thêm dòng
+                                        </button>
+                                        <button type="button" class="btn btn--outline btn--sm" onclick="removeTableRow(&#39;industrialTable2&#39;)">
+                                            Xóa dòng cuối
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="table-container">
+                                        <table class="data-table" id="industrialTable2">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Tên chất thải</th>
+                                                    <th>Khối lượng 2023 (kg/năm)</th>
+                                                    <th>Khối lượng 2024 (kg/năm)</th>
+                                                    <th>Khối lượng 6 tháng đầu 2025 (kg)</th>
+                                                    <th>Tổ chức/cá nhân tiếp nhận</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-row="1">
+                                                    <td>1</td>
+                                                    <td><input type="text" class="form-control table-input" name="ind2_name_1"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind2_2023_1" min="0" step="0.01"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind2_2024_1" min="0" step="0.01"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind2_2025_1" min="0" step="0.01"></td>
+                                                    <td><input type="text" class="form-control table-input" name="ind2_receiver_1"></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="total-row">
+                                                    <td colspan="2"><strong>Tổng cộng</strong></td>
+                                                    <td><strong id="total_2023_ind2">0,00</strong></td>
+                                                    <td><strong id="total_2024_ind2">0,00</strong></td>
+                                                    <td><strong id="total_2025_ind2">0,00</strong></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Subsection III -->
+                                <div class="subsection">
+                                    <h3>III. Chất thải phải xử lý</h3>
+                                    <div class="table-controls">
+                                        <button type="button" class="btn btn--secondary btn--sm" onclick="addTableRow(&#39;industrialTable3&#39;)">
+                                            Thêm dòng
+                                        </button>
+                                        <button type="button" class="btn btn--outline btn--sm" onclick="removeTableRow(&#39;industrialTable3&#39;)">
+                                            Xóa dòng cuối
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="table-container">
+                                        <table class="data-table" id="industrialTable3">
+                                            <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Tên chất thải</th>
+                                                    <th>Khối lượng 2023 (kg/năm)</th>
+                                                    <th>Khối lượng 2024 (kg/năm)</th>
+                                                    <th>Khối lượng 6 tháng đầu 2025 (kg)</th>
+                                                    <th>Tổ chức/cá nhân tiếp nhận</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-row="1">
+                                                    <td>1</td>
+                                                    <td><input type="text" class="form-control table-input" name="ind3_name_1"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind3_2023_1" min="0" step="0.01"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind3_2024_1" min="0" step="0.01"></td>
+                                                    <td><input type="number" class="form-control table-input calc-input" name="ind3_2025_1" min="0" step="0.01"></td>
+                                                    <td><input type="text" class="form-control table-input" name="ind3_receiver_1"></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="total-row">
+                                                    <td colspan="2"><strong>Tổng cộng</strong></td>
+                                                    <td><strong id="total_2023_ind3">0,00</strong></td>
+                                                    <td><strong id="total_2024_ind3">0,00</strong></td>
+                                                    <td><strong id="total_2025_ind3">0,00</strong></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Total for all B2 sections -->
+                                <div class="total-section">
+                                    <h3>Tổng cộng toàn bộ chất thải công nghiệp</h3>
+                                    <div class="total-summary">
+                                        <div class="total-item">
+                                            <span>Tổng 2023:</span>
+                                            <strong id="grand_total_2023">0,00 kg/năm</strong>
+                                        </div>
+                                        <div class="total-item">
+                                            <span>Tổng 2024:</span>
+                                            <strong id="grand_total_2024">0,00 kg/năm</strong>
+                                        </div>
+                                        <div class="total-item">
+                                            <span>Tổng 6 tháng 2025:</span>
+                                            <strong id="grand_total_2025">0,00 kg</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form C: Chất thải nguy hại -->
+                    <div class="survey-form" id="formC" data-form="C" style="display: none;">
+                        <div class="card">
+                            <div class="card__header">
+                                <h2>PHẦN C - CHẤT THẢI NGUY HẠI</h2>
+                                <p>Thông tin về chất thải nguy hại và liên hệ</p>
+                            </div>
+                            <div class="card__body">
+                                <div class="table-controls">
+                                    <button type="button" class="btn btn--secondary btn--sm" onclick="addTableRow(&#39;hazardousTable&#39;)">
+                                        Thêm dòng
+                                    </button>
+                                    <button type="button" class="btn btn--outline btn--sm" onclick="removeTableRow(&#39;hazardousTable&#39;)">
+                                        Xóa dòng cuối
+                                    </button>
+                                </div>
+                                
+                                <div class="table-container">
+                                    <table class="data-table" id="hazardousTable">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên chất thải nguy hại</th>
+                                                <th>Mã CTNH</th>
+                                                <th>Khối lượng 2023 (kg/năm)</th>
+                                                <th>Khối lượng 2024 (kg/năm)</th>
+                                                <th>Khối lượng 6 tháng đầu 2025 (kg)</th>
+                                                <th>Phương pháp xử lý</th>
+                                                <th>Tổ chức/cá nhân tiếp nhận</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-row="1">
+                                                <td>1</td>
+                                                <td><input type="text" class="form-control table-input" name="haz_name_1"></td>
+                                                <td><input type="text" class="form-control table-input" name="haz_code_1"></td>
+                                                <td><input type="number" class="form-control table-input" name="haz_2023_1" min="0" step="0.01"></td>
+                                                <td><input type="number" class="form-control table-input" name="haz_2024_1" min="0" step="0.01"></td>
+                                                <td><input type="number" class="form-control table-input" name="haz_2025_1" min="0" step="0.01"></td>
+                                                <td>
+                                                    <select class="form-control table-input" name="haz_method_1">
+                                                        <option value="">Chọn phương pháp</option>
+                                                        <option value="TC">TC - Tận thu/tái chế</option>
+                                                        <option value="TH">TH - Trung hòa</option>
+                                                        <option value="PT">PT - Phân tách/chiết/lọc/kết tủa</option>
+                                                        <option value="OH">OH - Oxy hóa</option>
+                                                        <option value="SH">SH - Sinh học</option>
+                                                        <option value="ĐX">ĐX - Đồng xử lý</option>
+                                                        <option value="TĐ">TĐ - Thiêu đốt</option>
+                                                        <option value="HR">HR - Hóa rắn</option>
+                                                        <option value="CL">CL - Cô lập/đóng kén</option>
+                                                        <option value="C">C - Chôn lấp</option>
+                                                        <option value="TR">TR - Tẩy rửa</option>
+                                                        <option value="SC">SC - Sơ chế</option>
+                                                        <option value="Khác">Khác</option>
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" class="form-control table-input" name="haz_receiver_1"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="method-legend">
+                                    <h4>Ghi chú các ký hiệu phương pháp xử lý:</h4>
+                                    <div class="legend-grid">
+                                        <div><strong>TC:</strong> Tận thu/tái chế</div>
+                                        <div><strong>TH:</strong> Trung hòa</div>
+                                        <div><strong>PT:</strong> Phân tách/chiết/lọc/kết tủa</div>
+                                        <div><strong>OH:</strong> Oxy hóa</div>
+                                        <div><strong>SH:</strong> Sinh học</div>
+                                        <div><strong>ĐX:</strong> Đồng xử lý</div>
+                                        <div><strong>TĐ:</strong> Thiêu đốt</div>
+                                        <div><strong>HR:</strong> Hóa rắn</div>
+                                        <div><strong>CL:</strong> Cô lập/đóng kén</div>
+                                        <div><strong>C:</strong> Chôn lấp</div>
+                                        <div><strong>TR:</strong> Tẩy rửa</div>
+                                        <div><strong>SC:</strong> Sơ chế</div>
+                                    </div>
+                                </div>
+
+                                <div class="contact-section">
+                                    <h3>Thông tin liên hệ</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label" for="contact_name">Họ tên người liên hệ *</label>
+                                            <input type="text" id="contact_name" class="form-control" required="">
+                                            <div class="error-message"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="contact_phone">Số điện thoại *</label>
+                                            <input type="tel" id="contact_phone" class="form-control" required="">
+                                            <div class="error-message"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Form -->
+                    <div class="survey-form" id="preview" data-form="preview" style="display: none;">
+                        <div class="card">
+                            <div class="card__header">
+                                <h2>Xem lại thông tin</h2>
+                                <p>Vui lòng kiểm tra lại thông tin trước khi gửi khảo sát</p>
+                            </div>
+                            <div class="card__body" id="previewContent">
+                                <!-- Preview content will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="navigation">
+                        <button type="button" class="btn btn--outline" id="prevBtn" style="display: none;">
+                            Quay lại
+                        </button>
+                        <button type="button" class="btn btn--primary" id="nextBtn" style="display: inline-flex;">
+                            Tiếp theo
+                        </button>
+                        <button type="button" class="btn btn--primary" id="submitBtn" style="display: none;">
+                            <span class="btn-text">Hoàn thành khảo sát</span>
+                            <span class="btn-loader" style="display: none;">Đang gửi...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Success Screen -->
+        <div class="success-screen hidden" id="successScreen">
+            <div class="container">
+                <div class="success-content">
+                    <div class="success-icon">✓</div>
+                    <h2>Cảm ơn bạn!</h2>
+                    <p>Khảo sát môi trường đã được gửi thành công và được ghi thành 1 dòng trong Google Sheets. Chúng tôi rất trân trọng thông tin bạn cung cấp.</p>
+                    <button type="button" class="btn btn--primary" onclick="location.reload()">
+                        Làm khảo sát mới
+                    </button>
+                </div>
+            </div>
+            <canvas id="confettiCanvas"></canvas>
+        </div>
+
+        <!-- Setup Instructions Modal -->
+        <div class="modal hidden" id="setupModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Hướng dẫn cài đặt Google Apps Script cho Single-Row Data</h3>
+                    <button class="modal-close" onclick="closeSetupModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4>Để tích hợp với Google Sheets (1 dòng duy nhất cho mỗi phản hồi), vui lòng làm theo các bước sau:</h4>
+                    <ol>
+                        <li>Truy cập <a href="https://script.google.com/" target="_blank">Google Apps Script</a></li>
+                        <li>Tạo một project mới</li>
+                        <li>Copy và paste đoạn code sau:</li>
+                    </ol>
+                    <pre><code>function doPost(e) {
+  const sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  
+  // Add headers if needed
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      'Timestamp', 'Tên DN', 'Địa chỉ', 'Ngành nghề', 'Vốn điều lệ', 
+      'Lao động', 'Diện tích', 'Loại hình', 'Chất thải sinh hoạt JSON',
+      'Chất thải CN - Nguyên liệu JSON', 'Chất thải CN - Tái chế JSON',
+      'Chất thải CN - Xử lý JSON', 'Chất thải nguy hại JSON', 
+      'Người liên hệ', 'SĐT'
+    ]);
+  }
+  
+  sheet.appendRow([
+    new Date(),
+    data.company_name || '',
+    data.address || '',
+    data.business_type || '',
+    data.capital || '',
+    data.employees || '',
+    data.factory_area || '',
+    data.company_type || '',
+    data.waste_data_json || '',
+    data.industrial_direct_json || '',
+    data.industrial_reuse_json || '',
+    data.industrial_treatment_json || '',
+    data.hazardous_data_json || '',
+    data.contact_name || '',
+    data.contact_phone || ''
+  ]);
+  
+  return ContentService.createTextOutput(JSON.stringify({status: 'success'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</code></pre>
+                    <ol start="4">
+                        <li>Thay thế 'YOUR_SHEET_ID' bằng ID của Google Sheets</li>
+                        <li>Deploy as web app với quyền "Anyone"</li>
+                        <li>Copy URL được tạo và cập nhật trong file app.js</li>
+                    </ol>
+                    <p><strong>Lưu ý:</strong> Với cấu trúc mới này, mỗi phản hồi sẽ được lưu thành 1 dòng duy nhất trong Google Sheets, các bảng động được chuyển thành JSON strings.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Button (Admin only) -->
+        <button class="setup-btn" onclick="openSetupModal()" title="Hướng dẫn cài đặt">
+            ⚙️
+        </button>
+    </div>
+
+    <script src="app.js"></script>
+
+</body></html>
