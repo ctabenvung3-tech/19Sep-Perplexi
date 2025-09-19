@@ -734,36 +734,33 @@ class EnvironmentalSurvey {
         }
     }
 
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // ĐÃ SỬA: Gửi dữ liệu thật lên Google Apps Script Web App
     async submitToGoogleSheets(singleRowData) {
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec';
-    try {
-        console.log('Submitting single-row data to Google Sheets:', singleRowData);
-        
-        // Bỏ comment đoạn fetch dưới đây để gửi dữ liệu thật:
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(singleRowData)
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6H4V9ksGAVS2ZZ6FR0GTC4B-1PTsow6cd5hSqZ5Qh7-bWG1n9cnakAiMinNd8YIxP/exec';
+
+        try {
+            console.log('Submitting single-row data to Google Sheets:', singleRowData);
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(singleRowData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Apps Script result:', result);
+            return result.status === 'success';
+        } catch (error) {
+            console.error('Google Sheets submission error:', error);
+            return false;
         }
-        const result = await response.json();
-        return result.ok === true;
-        
-        /*
-        // Xóa đoạn mock trả true bên dưới:
-        console.log('Single-row format preview:', singleRowData);
-        return true;
-        */
-    } catch (error) {
-        console.error('Google Sheets submission error:', error);
-        return false;
     }
-}
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     showSuccessScreen() {
         document.getElementById('successScreen').classList.remove('hidden');
@@ -795,7 +792,8 @@ class EnvironmentalSurvey {
         }
 
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const { width, height } = canvas;
+            ctx.clearRect(0, 0, width, height);
 
             confetti.forEach((piece, index) => {
                 piece.y += piece.speed;
@@ -808,9 +806,9 @@ class EnvironmentalSurvey {
                 ctx.fillRect(-piece.w/2, -piece.h/2, piece.w, piece.h);
                 ctx.restore();
 
-                if (piece.y > canvas.height) {
+                if (piece.y > height) {
                     confetti[index] = {
-                        x: Math.random() * canvas.width,
+                        x: Math.random() * width,
                         y: -piece.h,
                         w: piece.w,
                         h: piece.h,
