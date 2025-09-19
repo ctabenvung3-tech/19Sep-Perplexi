@@ -738,7 +738,8 @@ class EnvironmentalSurvey {
     // === REPLACE ONLY THIS FUNCTION IN app.js ===
     async submitToGoogleSheets(singleRowData) {
   // Web App URL đúng của bạn
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6H4V9ksGAVS2ZZ6FR0GTC4B-1PTsow6cd5hSqZ5Qh7-bWG1n9cnakAiMinNd8YIxP/exec';
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec
+';
 
   try {
     console.log('Submitting single-row data to Google Sheets:', singleRowData);
