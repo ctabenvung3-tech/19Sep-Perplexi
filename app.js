@@ -735,21 +735,20 @@ class EnvironmentalSurvey {
     }
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    // ĐÃ SỬA: Gửi dữ liệu thật lên Google Apps Script Web App
     // === REPLACE ONLY THIS FUNCTION IN app.js ===
-async submitToGoogleSheets(singleRowData) {
+    async submitToGoogleSheets(singleRowData) {
   // Web App URL đúng của bạn
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6H4V9ksGAVS2ZZ6FR0GTC4B-1PTsow6cd5hSqZ5Qh7-bWG1n9cnakAiMinNd8YIxP/exec';
 
   try {
     console.log('Submitting single-row data to Google Sheets:', singleRowData);
 
-    // Dùng text/plain để tránh preflight CORS, Apps Script vẫn đọc được e.postData.contents
+    // Dùng text/plain để tránh preflight CORS; Apps Script vẫn đọc e.postData.contents
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain;charset=utf-8'
-        // 'Content-Type': 'application/json'  // chỉ dùng nếu bạn chắc chắn CORS ok
+        // 'Content-Type': 'application/json' // chỉ dùng nếu chắc chắn CORS ok
       },
       body: JSON.stringify(singleRowData),
       redirect: 'follow'
@@ -766,14 +765,13 @@ async submitToGoogleSheets(singleRowData) {
       throw new Error(`HTTP ${response.status} ${response.statusText}`);
     }
 
-    // Kỳ vọng Apps Script trả { status: 'success', ... }
+    // Kỳ vọng doPost() trả JSON dạng { status: 'success', ... }
     return result && result.status === 'success';
   } catch (error) {
     console.error('Google Sheets submission error:', error);
     return false;
   }
 }
-
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     showSuccessScreen() {
