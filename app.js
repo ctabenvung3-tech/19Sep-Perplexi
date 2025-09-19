@@ -1,4 +1,3 @@
-// Environmental Survey Application JavaScript - Updated Version with Bug Fixes
 class EnvironmentalSurvey {
     constructor() {
         this.currentStep = 'A';
@@ -11,40 +10,27 @@ class EnvironmentalSurvey {
             industrialTable3: 1,
             hazardousTable: 1
         };
-        
         this.init();
     }
-
     init() {
         this.bindEvents();
         this.updateDisplay();
         this.setupCalculations();
-        // Don't load form data initially to avoid conflicts
         console.log('Environmental Survey App initialized with updated years and single-sheet format');
     }
-
     bindEvents() {
-        // Navigation buttons
         document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
         document.getElementById('prevBtn').addEventListener('click', () => this.prevStep());
         document.getElementById('submitBtn').addEventListener('click', () => this.submitSurvey());
-
-        // Form inputs - save data on change with improved binding
         this.bindFormInputs();
-
-        // Modal events
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal-overlay')) {
                 this.closeModal(e.target.closest('.modal'));
             }
         });
-
-        // Table calculation inputs
         this.setupTableCalculations();
     }
-
     bindFormInputs() {
-        // Use event delegation for better performance and dynamic content
         document.addEventListener('input', (e) => {
             if (e.target.matches('input, select, textarea')) {
                 this.clearError(e.target);
@@ -54,7 +40,6 @@ class EnvironmentalSurvey {
                 }
             }
         });
-
         document.addEventListener('change', (e) => {
             if (e.target.matches('input, select, textarea')) {
                 this.saveFormData();
@@ -64,34 +49,22 @@ class EnvironmentalSurvey {
             }
         });
     }
-
     setupTableCalculations() {
-        // Initial calculation
         setTimeout(() => this.calculateTotals(), 200);
     }
-
     calculateTotals() {
-        // Calculate B1 totals - Updated for new years
         this.calculateTableTotal('wasteTable', ['total_2023_b1', 'total_2024_b1', 'total_2025_b1'], [2, 3, 4]);
-        
-        // Calculate B2 individual section totals - Updated for new years
         this.calculateTableTotal('industrialTable1', ['total_2023_ind1', 'total_2024_ind1', 'total_2025_ind1'], [2, 3, 4]);
         this.calculateTableTotal('industrialTable2', ['total_2023_ind2', 'total_2024_ind2', 'total_2025_ind2'], [2, 3, 4]);
         this.calculateTableTotal('industrialTable3', ['total_2023_ind3', 'total_2024_ind3', 'total_2025_ind3'], [2, 3, 4]);
-        
-        // Calculate grand totals for B2
         this.calculateGrandTotals();
     }
-
     calculateTableTotal(tableId, totalIds, columnIndices) {
         const table = document.getElementById(tableId);
         if (!table) return;
-        
         const tbody = table.querySelector('tbody');
         const rows = tbody.querySelectorAll('tr');
-        
         const totals = columnIndices.map(() => 0);
-        
         rows.forEach(row => {
             columnIndices.forEach((colIndex, i) => {
                 const input = row.cells[colIndex]?.querySelector('input');
@@ -100,7 +73,6 @@ class EnvironmentalSurvey {
                 }
             });
         });
-        
         totalIds.forEach((totalId, i) => {
             const totalElement = document.getElementById(totalId);
             if (totalElement) {
@@ -111,7 +83,6 @@ class EnvironmentalSurvey {
             }
         });
     }
-
     calculateGrandTotals() {
         const getTotalValue = (id) => {
             const element = document.getElementById(id);
@@ -119,32 +90,23 @@ class EnvironmentalSurvey {
             const text = element.textContent.replace(/[^\d.,]/g, '').replace(',', '.');
             return parseFloat(text) || 0;
         };
-        
-        // Updated for new years
         const grand2023 = getTotalValue('total_2023_ind1') + getTotalValue('total_2023_ind2') + getTotalValue('total_2023_ind3');
         const grand2024 = getTotalValue('total_2024_ind1') + getTotalValue('total_2024_ind2') + getTotalValue('total_2024_ind3');
         const grand2025 = getTotalValue('total_2025_ind1') + getTotalValue('total_2025_ind2') + getTotalValue('total_2025_ind3');
-        
         const formatNumber = (num) => num.toLocaleString('vi-VN', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
-        
         const grandTotal2023 = document.getElementById('grand_total_2023');
         const grandTotal2024 = document.getElementById('grand_total_2024');
         const grandTotal2025 = document.getElementById('grand_total_2025');
-        
         if (grandTotal2023) grandTotal2023.textContent = formatNumber(grand2023) + ' kg/năm';
         if (grandTotal2024) grandTotal2024.textContent = formatNumber(grand2024) + ' kg/năm';
         if (grandTotal2025) grandTotal2025.textContent = formatNumber(grand2025) + ' kg';
     }
-
     saveFormData() {
         this.formData = {};
-
-        // Get all form inputs with improved logic
         const inputs = document.querySelectorAll('input, select, textarea');
-        
         inputs.forEach(input => {
             if (input.type === 'radio') {
                 if (input.checked) {
@@ -162,59 +124,40 @@ class EnvironmentalSurvey {
                 }
             }
         });
-
-        // Save table data
         this.saveTableData();
     }
-
     saveTableData() {
-        // Save waste table data
         this.formData.waste_data = this.getTableData('wasteTable');
-        
-        // Save industrial table data
         this.formData.industrial_data = {
             direct_use: this.getTableData('industrialTable1'),
             reuse_recycle: this.getTableData('industrialTable2'),
             waste_treatment: this.getTableData('industrialTable3')
         };
-        
-        // Save hazardous waste data
         this.formData.hazardous_data = this.getTableData('hazardousTable');
     }
-
     getTableData(tableId) {
         const table = document.getElementById(tableId);
         if (!table) return [];
-        
         const tbody = table.querySelector('tbody');
         const rows = tbody.querySelectorAll('tr');
         const data = [];
-        
         rows.forEach(row => {
             const rowData = {};
             const inputs = row.querySelectorAll('input, select');
-            
             inputs.forEach(input => {
                 if (input.name && input.value !== '') {
                     rowData[input.name] = input.value;
                 }
             });
-            
-            // Only add row if it has some data
             if (Object.keys(rowData).length > 0) {
                 data.push(rowData);
             }
         });
-        
         return data;
     }
-
-    // NEW FUNCTION: Format data for single-sheet structure
     formatDataForSingleSheet() {
         const singleRowData = {
             timestamp: new Date().toISOString(),
-            
-            // Section A: Individual columns
             company_name: this.formData.company_name || '',
             address: this.formData.address || '',
             business_type: this.formData.business_type || '',
@@ -222,78 +165,55 @@ class EnvironmentalSurvey {
             employees: this.formData.employees || '',
             factory_area: this.formData.factory_area || '',
             company_type: this.formData.company_type || '',
-            
-            // Section B1: Waste data as JSON string
             waste_data_json: JSON.stringify(this.formData.waste_data || []),
-            
-            // Section B2: Industrial data as separate JSON strings
             industrial_direct_json: JSON.stringify(this.formData.industrial_data?.direct_use || []),
             industrial_reuse_json: JSON.stringify(this.formData.industrial_data?.reuse_recycle || []),
             industrial_treatment_json: JSON.stringify(this.formData.industrial_data?.waste_treatment || []),
-            
-            // Section C: Hazardous waste as JSON string
             hazardous_data_json: JSON.stringify(this.formData.hazardous_data || []),
-            
-            // Contact info: Individual columns
             contact_name: this.formData.contact_name || '',
             contact_phone: this.formData.contact_phone || ''
         };
-
         return singleRowData;
     }
-
     validateCurrentStep() {
         const currentForm = document.querySelector(`#form${this.currentStep}`);
         if (!currentForm) return true;
-
         const requiredInputs = currentForm.querySelectorAll('[required]');
         let isValid = true;
-
-        // Clear all existing errors first
         currentForm.querySelectorAll('.error-message').forEach(error => {
             error.classList.remove('show');
         });
         currentForm.querySelectorAll('.form-control').forEach(control => {
             control.classList.remove('error');
         });
-
-        // More lenient validation - only check truly required fields
         requiredInputs.forEach(input => {
             if (!this.validateInput(input)) {
                 isValid = false;
             }
         });
-
-        // If no required fields are found, allow progression (for testing)
         if (requiredInputs.length === 0) {
             return true;
         }
-
         return isValid;
     }
-
     validateInput(input) {
         let isValid = true;
         let errorMessage = '';
-
         if (input.type === 'radio') {
             const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
             const checked = Array.from(radioGroup).some(radio => radio.checked);
-            
             if (!checked) {
                 isValid = false;
                 errorMessage = 'Vui lòng chọn một tùy chọn';
                 this.showError(input.closest('.form-group'), errorMessage);
             }
         } else if (!input.value || input.value.trim() === '') {
-            // More lenient - only show error for truly empty required fields
             if (input.hasAttribute('required')) {
                 isValid = false;
                 errorMessage = 'Trường này không được để trống';
                 this.showError(input, errorMessage);
             }
         } else {
-            // Specific validations
             switch (input.type) {
                 case 'tel':
                     const phoneRegex = /^[0-9+\-\s()]{8,}$/;
@@ -313,54 +233,37 @@ class EnvironmentalSurvey {
                     break;
             }
         }
-
         return isValid;
     }
-
     showError(element, message) {
         const formGroup = element.closest('.form-group');
         if (!formGroup) return;
-
         const errorDiv = formGroup.querySelector('.error-message');
-        
         if (errorDiv) {
             errorDiv.textContent = message;
             errorDiv.classList.add('show');
         }
-
         if (element.classList && element.classList.contains('form-control')) {
             element.classList.add('error');
         }
     }
-
     clearError(element) {
         const formGroup = element.closest('.form-group');
         if (!formGroup) return;
-
         const errorDiv = formGroup.querySelector('.error-message');
-        
         if (errorDiv) {
             errorDiv.classList.remove('show');
         }
-
         if (element.classList && element.classList.contains('form-control')) {
             element.classList.remove('error');
         }
     }
-
     nextStep() {
         console.log('Next step clicked, current step:', this.currentStep);
-        
-        // Save current form data
         this.saveFormData();
-        
-        // More lenient validation for testing
         if (!this.validateCurrentStep()) {
             console.log('Validation failed for step:', this.currentStep);
-            // Still allow progression for testing if no critical errors
-            // return;
         }
-
         const currentIndex = this.steps.indexOf(this.currentStep);
         if (currentIndex < this.steps.length - 1) {
             this.currentStep = this.steps[currentIndex + 1];
@@ -370,10 +273,8 @@ class EnvironmentalSurvey {
             this.showPreview();
         }
     }
-
     prevStep() {
         console.log('Previous step clicked, current step:', this.currentStep);
-        
         if (this.currentStep === 'preview') {
             this.currentStep = this.steps[this.steps.length - 1];
         } else {
@@ -382,11 +283,9 @@ class EnvironmentalSurvey {
                 this.currentStep = this.steps[currentIndex - 1];
             }
         }
-        
         console.log('Moving to step:', this.currentStep);
         this.updateDisplay();
     }
-
     showPreview() {
         console.log('Showing preview');
         this.saveFormData();
@@ -394,10 +293,8 @@ class EnvironmentalSurvey {
         this.currentStep = 'preview';
         this.updateDisplay();
     }
-
     generatePreview() {
         const previewContent = document.getElementById('previewContent');
-        
         const sections = [
             {
                 title: 'THÔNG TIN CHUNG',
@@ -431,10 +328,8 @@ class EnvironmentalSurvey {
                 ]
             }
         ];
-
         previewContent.innerHTML = sections.map(section => {
             let content = '';
-            
             if (section.isTable) {
                 content = this.generateTablePreview(section.data, section.title);
             } else if (section.isIndustrial) {
@@ -442,13 +337,11 @@ class EnvironmentalSurvey {
             } else {
                 const items = section.fields.map(field => {
                     let value = this.formData[field.key];
-                    
                     if (!value || value === '') {
                         value = 'Chưa điền';
                     } else if (field.unit) {
                         value = value + field.unit;
                     }
-
                     return `
                         <div class="preview-item">
                             <div class="preview-label">${field.label}:</div>
@@ -456,11 +349,8 @@ class EnvironmentalSurvey {
                         </div>
                     `;
                 }).join('');
-                
                 content = items;
             }
-            
-            // Add extra fields if specified
             if (section.extraFields) {
                 const extraItems = section.extraFields.map(field => {
                     let value = this.formData[field.key] || 'Chưa điền';
@@ -473,7 +363,6 @@ class EnvironmentalSurvey {
                 }).join('');
                 content += extraItems;
             }
-
             return `
                 <div class="preview-section">
                     <h3>${section.title}</h3>
@@ -482,14 +371,11 @@ class EnvironmentalSurvey {
             `;
         }).join('');
     }
-
     generateTablePreview(data, title) {
         if (!data || data.length === 0) {
             return '<p style="color: var(--color-text-secondary); font-style: italic;">Chưa có dữ liệu</p>';
         }
-        
         if (title.includes('NGUY HẠI')) {
-            // Hazardous waste table - Updated headers for new years
             return `
                 <table class="preview-table">
                     <thead>
@@ -519,7 +405,6 @@ class EnvironmentalSurvey {
                 </table>
             `;
         } else {
-            // Regular waste table - Updated headers for new years
             return `
                 <table class="preview-table">
                     <thead>
@@ -546,20 +431,16 @@ class EnvironmentalSurvey {
             `;
         }
     }
-
     getItemValue(item, prefix) {
-        // Helper function to get value from dynamic table items
         const keys = Object.keys(item).filter(key => key.startsWith(prefix));
         return keys.length > 0 ? item[keys[0]] : '';
     }
-
     generateIndustrialPreview(data) {
         const sections = [
             { title: 'Sử dụng trực tiếp làm nguyên liệu', key: 'direct_use' },
             { title: 'Tái sử dụng, tái chế', key: 'reuse_recycle' },
             { title: 'Chất thải phải xử lý', key: 'waste_treatment' }
         ];
-        
         return sections.map(section => {
             const sectionData = data[section.key] || [];
             if (sectionData.length === 0) {
@@ -570,7 +451,6 @@ class EnvironmentalSurvey {
                     </div>
                 `;
             }
-            
             return `
                 <div style="margin-bottom: var(--space-20);">
                     <h4 style="color: var(--color-text); margin-bottom: var(--space-12);">${section.title}</h4>
@@ -604,56 +484,40 @@ class EnvironmentalSurvey {
             `;
         }).join('');
     }
-
     updateDisplay() {
         console.log('Updating display for step:', this.currentStep);
-        
-        // Hide all forms
         document.querySelectorAll('.survey-form').forEach(form => {
             form.classList.remove('active');
             form.style.display = 'none';
         });
-
-        // Show current form
         let currentForm;
         if (this.currentStep === 'preview') {
             currentForm = document.getElementById('preview');
         } else {
             currentForm = document.getElementById(`form${this.currentStep}`);
         }
-        
         if (currentForm) {
             currentForm.style.display = 'block';
-            // Use setTimeout to ensure display change is processed first
             setTimeout(() => {
                 currentForm.classList.add('active');
             }, 10);
         }
-
-        // Update navigation
         this.updateNavigation();
         this.updateProgressBar();
         this.updateSteps();
-        
-        // Recalculate totals for table sections
         if (this.currentStep === 'B1' || this.currentStep === 'B2') {
             setTimeout(() => this.calculateTotals(), 100);
         }
     }
-
     updateNavigation() {
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const submitBtn = document.getElementById('submitBtn');
-
-        // Previous button
         if (this.currentStep === 'A') {
             prevBtn.style.display = 'none';
         } else {
             prevBtn.style.display = 'inline-flex';
         }
-
-        // Next/Submit buttons
         if (this.currentStep === 'preview') {
             nextBtn.style.display = 'none';
             submitBtn.style.display = 'inline-flex';
@@ -662,28 +526,22 @@ class EnvironmentalSurvey {
             submitBtn.style.display = 'none';
         }
     }
-
     updateProgressBar() {
         const progressFill = document.getElementById('progressFill');
         let progress;
-
         if (this.currentStep === 'preview') {
             progress = 100;
         } else {
             const currentIndex = this.steps.indexOf(this.currentStep);
             progress = ((currentIndex + 1) / this.steps.length) * 100;
         }
-
         progressFill.style.width = `${progress}%`;
     }
-
     updateSteps() {
         const steps = document.querySelectorAll('.step');
-        
         steps.forEach((step, index) => {
             const stepId = this.steps[index];
             step.classList.remove('active', 'completed');
-            
             if (this.currentStep === 'preview') {
                 step.classList.add('completed');
             } else if (stepId === this.currentStep) {
@@ -696,101 +554,64 @@ class EnvironmentalSurvey {
             }
         });
     }
-
     async submitSurvey() {
         const submitBtn = document.getElementById('submitBtn');
         const btnText = submitBtn.querySelector('.btn-text');
         const btnLoader = submitBtn.querySelector('.btn-loader');
-
-        // Show loading state
         btnText.style.display = 'none';
         btnLoader.style.display = 'inline-flex';
         submitBtn.disabled = true;
-
         try {
-            // Prepare data for submission using single-row format
             const singleRowData = this.formatDataForSingleSheet();
-
-            // Simulate API call delay
             await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Submit to Google Sheets with single-row format
             const success = await this.submitToGoogleSheets(singleRowData);
-
             if (success) {
                 this.showSuccessScreen();
             } else {
                 throw new Error('Submission failed');
             }
-
         } catch (error) {
             console.error('Submission error:', error);
             alert('Có lỗi xảy ra khi gửi khảo sát. Vui lòng thử lại sau.');
-            
-            // Reset button state
             btnText.style.display = 'inline';
             btnLoader.style.display = 'none';
             submitBtn.disabled = false;
         }
     }
-
-    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    // === REPLACE ONLY THIS FUNCTION IN app.js ===
     async submitToGoogleSheets(singleRowData) {
-  // Web App URL đúng của bạn
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec
-';
-
-  try {
-    console.log('Submitting single-row data to Google Sheets:', singleRowData);
-
-    // Dùng text/plain để tránh preflight CORS; Apps Script vẫn đọc e.postData.contents
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8'
-        // 'Content-Type': 'application/json' // chỉ dùng nếu chắc chắn CORS ok
-      },
-      body: JSON.stringify(singleRowData),
-      redirect: 'follow'
-    });
-
-    // Nếu Apps Script trả về HTML (do lỗi), đọc text để log
-    const raw = await response.text();
-    let result = null;
-    try { result = JSON.parse(raw); } catch (_) { /* không phải JSON */ }
-
-    console.log('Apps Script raw response:', raw);
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status} ${response.statusText}`);
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec';
+        try {
+            console.log('Submitting single-row data to Google Sheets:', singleRowData);
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(singleRowData)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            console.log('Response from Google Sheets:', result);
+            return result.ok === true;
+        } catch (error) {
+            console.error('Google Sheets submission error:', error);
+            return false;
+        }
     }
-
-    // Kỳ vọng doPost() trả JSON dạng { status: 'success', ... }
-    return result && result.status === 'success';
-  } catch (error) {
-    console.error('Google Sheets submission error:', error);
-    return false;
-  }
-}
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
     showSuccessScreen() {
         document.getElementById('successScreen').classList.remove('hidden');
         this.startConfetti();
     }
-
     startConfetti() {
         const canvas = document.getElementById('confettiCanvas');
         const ctx = canvas.getContext('2d');
-        
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const confetti = [];
         const colors = ['#1FB8CD', '#FFC185', '#B4413C', '#ECEBD5', '#5D878F', '#34D399', '#10B981'];
-
-        // Create confetti pieces
         for (let i = 0; i < 150; i++) {
             confetti.push({
                 x: Math.random() * canvas.width,
@@ -803,25 +624,20 @@ class EnvironmentalSurvey {
                 angularSpeed: Math.random() * 0.3 + 0.1
             });
         }
-
         function animate() {
-            const { width, height } = canvas;
-            ctx.clearRect(0, 0, width, height);
-
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             confetti.forEach((piece, index) => {
                 piece.y += piece.speed;
                 piece.angle += piece.angularSpeed;
-
                 ctx.save();
                 ctx.translate(piece.x, piece.y);
                 ctx.rotate(piece.angle);
                 ctx.fillStyle = piece.color;
-                ctx.fillRect(-piece.w/2, -piece.h/2, piece.w, piece.h);
+                ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
                 ctx.restore();
-
-                if (piece.y > height) {
+                if (piece.y > canvas.height) {
                     confetti[index] = {
-                        x: Math.random() * width,
+                        x: Math.random() * canvas.width,
                         y: -piece.h,
                         w: piece.w,
                         h: piece.h,
@@ -832,44 +648,31 @@ class EnvironmentalSurvey {
                     };
                 }
             });
-
             requestAnimationFrame(animate);
         }
-
         animate();
-
-        // Stop confetti after 6 seconds
         setTimeout(() => {
             canvas.style.display = 'none';
         }, 6000);
     }
-
     closeModal(modal) {
         modal.classList.add('hidden');
     }
 }
-
-// Table management functions (global) - Updated for new years
 function addTableRow(tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
-    
     const tbody = table.querySelector('tbody');
     const currentRows = tbody.querySelectorAll('tr').length;
     const maxRows = tableId === 'hazardousTable' ? 9 : 10;
-    
     if (currentRows >= maxRows) {
         alert(`Tối đa ${maxRows} dòng cho bảng này`);
         return;
     }
-    
     const newRowNumber = currentRows + 1;
     const newRow = document.createElement('tr');
     newRow.setAttribute('data-row', newRowNumber);
-    
-    // Generate appropriate row content based on table type - Updated for new years
     let rowContent = '';
-    
     if (tableId === 'wasteTable') {
         rowContent = `
             <td>${newRowNumber}</td>
@@ -935,52 +738,36 @@ function addTableRow(tableId) {
             <td><input type="text" class="form-control table-input" name="haz_receiver_${newRowNumber}"></td>
         `;
     }
-    
     newRow.innerHTML = rowContent;
     tbody.appendChild(newRow);
-    
     console.log(`Added row ${newRowNumber} to ${tableId}`);
 }
-
 function removeTableRow(tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
-    
     const tbody = table.querySelector('tbody');
     const rows = tbody.querySelectorAll('tr');
-    
     if (rows.length <= 1) {
         alert('Phải có ít nhất 1 dòng trong bảng');
         return;
     }
-    
     const lastRow = rows[rows.length - 1];
     lastRow.remove();
-    
-    // Recalculate totals
     if (window.surveyApp) {
         window.surveyApp.calculateTotals();
     }
-    
     console.log(`Removed last row from ${tableId}`);
 }
-
-// Modal functions (global)
 function openSetupModal() {
     document.getElementById('setupModal').classList.remove('hidden');
 }
-
 function closeSetupModal() {
     document.getElementById('setupModal').classList.add('hidden');
 }
-
-// Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing environmental survey app with updated years (2023, 2024, 6 tháng đầu 2025) and single-sheet format...');
     window.surveyApp = new EnvironmentalSurvey();
 });
-
-// Handle window resize for confetti canvas
 window.addEventListener('resize', () => {
     const canvas = document.getElementById('confettiCanvas');
     if (canvas) {
