@@ -735,43 +735,35 @@ class EnvironmentalSurvey {
     }
 
     async submitToGoogleSheets(singleRowData) {
-        // Mock Google Apps Script Web App URL
-        // In real implementation, replace with actual deployed web app URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec';
-
-        try {
-            console.log('Submitting single-row data to Google Sheets:', singleRowData);
-            
-            // For demo purposes, we'll simulate a successful submission
-            // In real implementation, uncomment the fetch code below:
-            
-            /*
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(singleRowData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            return result.status === 'success';
-            */
-
-            // Mock successful submission
-            console.log('Single-row format preview:', singleRowData);
-            return true;
-
-        } catch (error) {
-            console.error('Google Sheets submission error:', error);
-            return false;
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec';
+    try {
+        console.log('Submitting single-row data to Google Sheets:', singleRowData);
+        
+        // Bỏ comment đoạn fetch dưới đây để gửi dữ liệu thật:
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(singleRowData)
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const result = await response.json();
+        return result.ok === true;
+        
+        /*
+        // Xóa đoạn mock trả true bên dưới:
+        console.log('Single-row format preview:', singleRowData);
+        return true;
+        */
+    } catch (error) {
+        console.error('Google Sheets submission error:', error);
+        return false;
     }
+}
 
     showSuccessScreen() {
         document.getElementById('successScreen').classList.remove('hidden');
