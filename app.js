@@ -736,30 +736,44 @@ class EnvironmentalSurvey {
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     // ĐÃ SỬA: Gửi dữ liệu thật lên Google Apps Script Web App
-    async submitToGoogleSheets(singleRowData) {
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6H4V9ksGAVS2ZZ6FR0GTC4B-1PTsow6cd5hSqZ5Qh7-bWG1n9cnakAiMinNd8YIxP/exec';
+    // === REPLACE ONLY THIS FUNCTION IN app.js ===
+async submitToGoogleSheets(singleRowData) {
+  // Web App URL đúng của bạn
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6H4V9ksGAVS2ZZ6FR0GTC4B-1PTsow6cd5hSqZ5Qh7-bWG1n9cnakAiMinNd8YIxP/exec';
 
-        try {
-            console.log('Submitting single-row data to Google Sheets:', singleRowData);
+  try {
+    console.log('Submitting single-row data to Google Sheets:', singleRowData);
 
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(singleRowData),
-            });
+    // Dùng text/plain để tránh preflight CORS, Apps Script vẫn đọc được e.postData.contents
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+        // 'Content-Type': 'application/json'  // chỉ dùng nếu bạn chắc chắn CORS ok
+      },
+      body: JSON.stringify(singleRowData),
+      redirect: 'follow'
+    });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+    // Nếu Apps Script trả về HTML (do lỗi), đọc text để log
+    const raw = await response.text();
+    let result = null;
+    try { result = JSON.parse(raw); } catch (_) { /* không phải JSON */ }
 
-            const result = await response.json();
-            console.log('Apps Script result:', result);
-            return result.status === 'success';
-        } catch (error) {
-            console.error('Google Sheets submission error:', error);
-            return false;
-        }
+    console.log('Apps Script raw response:', raw);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} ${response.statusText}`);
     }
+
+    // Kỳ vọng Apps Script trả { status: 'success', ... }
+    return result && result.status === 'success';
+  } catch (error) {
+    console.error('Google Sheets submission error:', error);
+    return false;
+  }
+}
+
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     showSuccessScreen() {
