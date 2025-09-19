@@ -737,7 +737,7 @@ class EnvironmentalSurvey {
     async submitToGoogleSheets(singleRowData) {
         // Mock Google Apps Script Web App URL
         // In real implementation, replace with actual deployed web app URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynpcuWCVQSq-m_J5AZynt9N75G5y80I1JTY2IzcwPHCd_cRHpl_sIhEoFp1rkFeasbFg/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwVH6kTUaXtIdaOm2ZKgTFBkB62ZskJwYnFzycJ_z3Cx3Hr9ZOyeZ1XOcp8yA-sOzq/exec';
 
         try {
             console.log('Submitting single-row data to Google Sheets:', singleRowData);
