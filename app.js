@@ -1,16 +1,10 @@
 /* ===========================
-   KS Môi Trường – App JS (GH Pages → Google Sheets)
-   - Gửi dữ liệu thật về Google Apps Script Web App
-   - Không phụ thuộc framework, hoạt động với HTML thuần
-   - Có cơ chế “tự bắt” form/btn gửi linh hoạt
+   KS Môi Trường – App JS (Stepper + Google Sheets)
    =========================== */
 
-// 1) URL Web App của bạn (đã cung cấp)
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6H4V9ksGAVS2ZZ6FR0GTC4B-1PTsow6cd5hSqZ5Qh7-bWG1n9cnakAiMinNd8YIxP/exec";
 
-// 2) Cấu hình tên trường mặc định (nếu có)
 const FIELD_MAP = {
-  // Các key phổ biến bạn đã dùng; nếu HTML của bạn đặt name khác, vẫn được thu thập auto bên dưới
   company: ["company", "company_name", "ten_doanh_nghiep", "tencongty"],
   address: ["address", "dia_chi", "diachi"],
   mainIndustry: ["main_industry", "nganh_chinh", "industry"],
@@ -22,26 +16,43 @@ const FIELD_MAP = {
   contactPhone: ["contact_phone", "so_dien_thoai", "lienhe_sdt"],
 };
 
-// 3) Lớp chính
 class EnvironmentalSurvey {
   constructor() {
-    // Tìm form#surveyForm (nếu có)
-    this.formEl = document.querySelector("#surveyForm") || null;
+    // ==== STEP UI ====
+    this.steps = Array.from(document.querySelectorAll(".step"));
+    this.currentStep = 0;
+    this.nextBtn = document.getElementById("nextBtn");
+    this.prevBtn = document.getElementById("prevBtn");
 
-    // Tìm nút Submit (nếu không có form)
+    // Khởi tạo hiển thị bước
+    this.updateStepUI();
+
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.goStep(1);
+      });
+    }
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.goStep(-1);
+      });
+    }
+
+    // ==== SUBMIT ====
+    this.formEl = document.getElementById("surveyForm") || null;
     this.submitBtn =
-      document.querySelector("#submitBtn") ||
+      document.getElementById("submitBtn") ||
       document.querySelector("[data-submit]") ||
       null;
 
-    // Gắn sự kiện submit theo những gì có sẵn
     if (this.formEl) {
       this.formEl.addEventListener("submit", (e) => {
         e.preventDefault();
         this.handleSubmit();
       });
     }
-
     if (this.submitBtn && !this.formEl) {
       this.submitBtn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -49,23 +60,43 @@ class EnvironmentalSurvey {
       });
     }
 
-    // Một số nút/tiện ích khác (không bắt buộc)
-    this.progressFill = document.querySelector("#progressFill");
-    this.previewBox = document.querySelector("#previewContent");
+    this.previewBox = document.getElementById("previewContent");
+    this.progressFill = document.getElementById("progressFill");
   }
 
-  // Thu thập dữ liệu: tự quét tất cả input/textarea/select trong trang
+  goStep(delta) {
+    if (!this.steps.length) return;
+    this.currentStep += delta;
+    if (this.currentStep < 0) this.currentStep = 0;
+    if (this.currentStep > this.steps.length - 1)
+      this.currentStep = this.steps.length - 1;
+    this.updateStepUI();
+  }
+
+  updateStepUI() {
+    if (!this.steps.length) return;
+    this.steps.forEach((el, idx) => {
+      el.style.display = idx === this.currentStep ? "block" : "none";
+    });
+    if (this.prevBtn) this.prevBtn.disabled = this.currentStep === 0;
+    if (this.nextBtn) this.nextBtn.style.display =
+      this.currentStep < this.steps.length - 1 ? "inline-block" : "none";
+    if (this.submitBtn) this.submitBtn.style.display =
+      this.currentStep === this.steps.length - 1 ? "inline-block" : "none";
+
+    // progress (nếu có)
+    if (this.progressFill) {
+      const pct = ((this.currentStep + 1) / this.steps.length) * 100;
+      this.progressFill.style.width = `${pct}%`;
+    }
+  }
+
   collectPayload() {
     const payload = {};
-
-    // 3.1: lấy dữ liệu có cấu trúc name="key"
-    const inputs = document.querySelectorAll(
-      "input[name], textarea[name], select[name]"
-    );
+    const inputs = document.querySelectorAll("input[name], textarea[name], select[name]");
     inputs.forEach((el) => {
       const name = (el.getAttribute("name") || "").trim();
       if (!name) return;
-
       if (el.type === "checkbox") {
         payload[name] = el.checked;
       } else if (el.type === "radio") {
@@ -75,88 +106,59 @@ class EnvironmentalSurvey {
       }
     });
 
-    // 3.2: ánh xạ các key quan trọng (nếu không có name đúng)
     for (const stdKey of Object.keys(FIELD_MAP)) {
       if (payload[stdKey] != null && payload[stdKey] !== "") continue;
-      const candidates = FIELD_MAP[stdKey];
-      const found = candidates.find((k) => payload[k] != null && payload[k] !== "");
+      const cands = FIELD_MAP[stdKey];
+      const found = cands.find((k) => payload[k] != null && payload[k] !== "");
       if (found) payload[stdKey] = payload[found];
     }
 
-    // 3.3: tổng các bảng nếu có data-role
-    // Ví dụ: <table data-role="b1"> có các ô input[name="b1_2023"], ...
+    // Ví dụ tính tổng nếu bạn đặt name theo mẫu
     payload.b1_total_2023 = this.sumBySelector('input[name^="b1_2023"], [data-b1-2023]');
     payload.b1_total_2024 = this.sumBySelector('input[name^="b1_2024"], [data-b1-2024]');
     payload.b1_total_2025 = this.sumBySelector('input[name^="b1_2025"], [data-b1-2025]');
 
-    // 3.4: thêm meta
     payload._submitted_at = new Date().toISOString();
     payload._page = location.href;
-
     return payload;
   }
 
   sumBySelector(selector) {
     let total = 0;
     document.querySelectorAll(selector).forEach((el) => {
-      const v =
-        el.value != null && el.value !== ""
-          ? String(el.value).replace(/[^\d.-]/g, "")
-          : el.textContent || el.innerText || "0";
-      const n = parseFloat(String(v).replace(/[^\d.-]/g, "")) || 0;
+      const raw = el.value ?? el.textContent ?? "0";
+      const n = parseFloat(String(raw).replace(/[^\d.-]/g, "")) || 0;
       total += n;
     });
     return total;
   }
 
-  // Gửi lên Google Sheets qua Apps Script
-  async submitToGoogleSheets(singleRowData) {
+  async submitToGoogleSheets(data) {
     try {
-      console.log("Submitting to Google Sheets:", singleRowData);
-
-      // DÙNG no-cors để tránh CORS; không đọc được JSON trả về nhưng ghi được
       await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors",
+        mode: "no-cors", // gửi được từ GitHub Pages → Apps Script
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(singleRowData),
+        body: JSON.stringify(data),
       });
-
-      // Với no-cors, coi như gửi thành công
-      return true;
-    } catch (error) {
-      console.error("Google Sheets submission error:", error);
+      return true; // no-cors: coi như ok
+    } catch (err) {
+      console.error("Submit error:", err);
       return false;
     }
   }
 
-  // Xử lý khi bấm Gửi
   async handleSubmit() {
-    try {
-      const data = this.collectPayload();
+    const payload = this.collectPayload();
+    if (this.previewBox) this.previewBox.textContent = JSON.stringify(payload, null, 2);
 
-      // Hiển thị preview nếu có khung
-      if (this.previewBox) {
-        this.previewBox.textContent = JSON.stringify(data, null, 2);
-      }
+    const ok = await this.submitToGoogleSheets(payload);
+    alert(ok ? "Đã gửi lên Google Sheets! Vui lòng kiểm tra Sheet." : "Gửi thất bại, thử lại sau.");
 
-      // Gửi
-      const ok = await this.submitToGoogleSheets(data);
-
-      if (ok) {
-        alert("Đã gửi lên Google Sheets! Mở sheet để kiểm tra dòng mới.");
-        if (this.formEl) this.formEl.reset();
-      } else {
-        alert("Gửi thất bại. Vui lòng thử lại.");
-      }
-    } catch (e) {
-      console.error(e);
-      alert("Có lỗi khi gửi dữ liệu. Vui lòng thử lại.");
-    }
+    if (ok && this.formEl) this.formEl.reset();
   }
 }
 
-// 4) Khởi tạo app khi DOM sẵn sàng
 document.addEventListener("DOMContentLoaded", () => {
   new EnvironmentalSurvey();
 });
