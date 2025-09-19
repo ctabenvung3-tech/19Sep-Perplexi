@@ -8,67 +8,198 @@
 </head>
 <body>
   <div class="container">
-    <h1>KHẢO SÁT THÔNG TIN MÔI TRƯỜNG DOANH NGHIỆP</h1>
+    <h1>BIỂU MẪU KHẢO SÁT THÔNG TIN MÔI TRƯỜNG</h1>
     <p><em>Chúng tôi cam kết chỉ sử dụng thông tin cho mục đích nghiên cứu khoa học</em></p>
 
+    <!-- Thanh tiến độ -->
+    <div id="progressWrap">
+      <div class="progress-bar"><div id="progressFill"></div></div>
+    </div>
+
+    <!-- Form khảo sát -->
     <form id="surveyForm">
+
       <!-- PHẦN A -->
-      <h2>PHẦN A - THÔNG TIN CHUNG</h2>
-      <label>Tên doanh nghiệp *</label>
-      <input type="text" name="company" required>
+      <div class="step">
+        <h2>PHẦN A. THÔNG TIN CHUNG</h2>
 
-      <label>Địa chỉ</label>
-      <input type="text" name="address">
+        <label>Tên doanh nghiệp *</label>
+        <input type="text" name="company" required>
 
-      <label>Vốn điều lệ</label>
-      <select name="capital">
-        <option value="Dưới 3 tỷ">Dưới 3 tỷ</option>
-        <option value="3 - 20 tỷ">Từ 3 đến dưới 20 tỷ</option>
-        <option value="20 - 100 tỷ">Từ 20 đến dưới 100 tỷ</option>
-        <option value="Trên 100 tỷ">Trên 100 tỷ</option>
-      </select>
+        <label>Địa chỉ *</label>
+        <input type="text" name="address" required>
 
-      <label>Quy mô lao động (người)</label>
-      <input type="number" name="employees">
+        <label>Ngành nghề sản xuất chính</label>
+        <input type="text" name="industry">
 
-      <label>Diện tích nhà xưởng sản xuất (m²)</label>
-      <input type="number" name="factory_area">
+        <label>Vốn điều lệ *</label>
+        <select name="capital" required>
+          <option value="duoi3">Dưới 3 tỷ</option>
+          <option value="3to20">Từ 3 đến dưới 20 tỷ</option>
+          <option value="20to100">Từ 20 đến dưới 100 tỷ</option>
+          <option value="100plus">Trên 100 tỷ</option>
+        </select>
 
-      <label>Loại hình doanh nghiệp *</label>
-      <select name="business_type" required>
-        <option>Doanh nghiệp nhà nước</option>
-        <option>Doanh nghiệp FDI</option>
-        <option>Doanh nghiệp ngoài NN trong nước</option>
-      </select>
+        <label>Quy mô lao động (người)</label>
+        <input type="number" name="employees">
 
-      <!-- PHẦN B -->
-      <h2>PHẦN B - THÔNG TIN MÔI TRƯỜNG</h2>
-      <label>Phần B.1: Chất thải rắn sinh hoạt</label>
-      <input type="text" name="b1" placeholder="Tên chất thải và KLPS">
+        <label>Diện tích nhà xưởng sản xuất (m²)</label>
+        <input type="number" name="factory_area">
 
-      <label>Phần B.2.I: CTR công nghiệp thông thường - tại cơ sở</label>
-      <input type="text" name="b2i">
+        <label>Loại hình doanh nghiệp *</label>
+        <select name="business_type" required>
+          <option>Doanh nghiệp nhà nước</option>
+          <option>Doanh nghiệp FDI</option>
+          <option>Doanh nghiệp ngoài NN trong nước</option>
+        </select>
+      </div>
 
-      <label>Phần B.2.II: CTR công nghiệp thông thường - Tái sử dụng/tái chế</label>
-      <input type="text" name="b2ii">
+      <!-- PHẦN B1 -->
+      <div class="step" style="display:none;">
+        <h2>PHẦN B.1. CHẤT THẢI RẮN SINH HOẠT (CTRSH)</h2>
+        <p>Vui lòng liệt kê các loại chất thải, khối lượng phát sinh (kg/năm) và đơn vị tiếp nhận.</p>
 
-      <label>Phần B.2.III: CTR công nghiệp thông thường - phải xử lý</label>
-      <input type="text" name="b2iii">
+        <table>
+          <thead>
+            <tr>
+              <th>Tên chất thải</th>
+              <th>KLPS 2023 (kg)</th>
+              <th>KLPS 2024 (kg)</th>
+              <th>KLPS 6T 2025 (kg)</th>
+              <th>Đơn vị tiếp nhận</th>
+            </tr>
+          </thead>
+          <tbody id="tableB1">
+            <tr>
+              <td><input type="text" name="b1_name[]"></td>
+              <td><input type="number" name="b1_2023[]"></td>
+              <td><input type="number" name="b1_2024[]"></td>
+              <td><input type="number" name="b1_2025[]"></td>
+              <td><input type="text" name="b1_unit[]"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="addRowBtn" data-target="tableB1">+ Thêm dòng</button>
+      </div>
 
-      <label>Phần 3: Chất thải nguy hại (CTNH)</label>
-      <input type="text" name="ctnh">
+      <!-- PHẦN B2 -->
+      <div class="step" style="display:none;">
+        <h2>PHẦN B.2. CHẤT THẢI CÔNG NGHIỆP THÔNG THƯỜNG</h2>
+
+        <h3>B2.I: Sử dụng trực tiếp tại cơ sở</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên chất thải</th>
+              <th>KLPS 2023</th>
+              <th>KLPS 2024</th>
+              <th>KLPS 6T 2025</th>
+            </tr>
+          </thead>
+          <tbody id="tableB2I">
+            <tr>
+              <td><input type="text" name="b2i_name[]"></td>
+              <td><input type="number" name="b2i_2023[]"></td>
+              <td><input type="number" name="b2i_2024[]"></td>
+              <td><input type="number" name="b2i_2025[]"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="addRowBtn" data-target="tableB2I">+ Thêm dòng</button>
+
+        <h3>B2.II: Tái sử dụng / tái chế (chuyển giao)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên chất thải</th>
+              <th>KLPS 2023</th>
+              <th>KLPS 2024</th>
+              <th>KLPS 6T 2025</th>
+              <th>Đơn vị tiếp nhận</th>
+            </tr>
+          </thead>
+          <tbody id="tableB2II">
+            <tr>
+              <td><input type="text" name="b2ii_name[]"></td>
+              <td><input type="number" name="b2ii_2023[]"></td>
+              <td><input type="number" name="b2ii_2024[]"></td>
+              <td><input type="number" name="b2ii_2025[]"></td>
+              <td><input type="text" name="b2ii_unit[]"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="addRowBtn" data-target="tableB2II">+ Thêm dòng</button>
+
+        <h3>B2.III: Chất thải phải xử lý</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên chất thải</th>
+              <th>KLPS 2023</th>
+              <th>KLPS 2024</th>
+              <th>KLPS 6T 2025</th>
+            </tr>
+          </thead>
+          <tbody id="tableB2III">
+            <tr>
+              <td><input type="text" name="b2iii_name[]"></td>
+              <td><input type="number" name="b2iii_2023[]"></td>
+              <td><input type="number" name="b2iii_2024[]"></td>
+              <td><input type="number" name="b2iii_2025[]"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="addRowBtn" data-target="tableB2III">+ Thêm dòng</button>
+      </div>
 
       <!-- PHẦN C -->
-      <h2>PHẦN C - THÔNG TIN LIÊN HỆ</h2>
-      <label>Người liên hệ</label>
-      <input type="text" name="contact_name">
+      <div class="step" style="display:none;">
+        <h2>PHẦN C. CHẤT THẢI NGUY HẠI (CTNH)</h2>
+        <p>Ghi chú phương pháp xử lý: TC, TH, PT, OH, SH, ĐX, TĐ, HR, CL, C...</p>
 
-      <label>Số điện thoại liên hệ</label>
-      <input type="text" name="contact_phone">
+        <table>
+          <thead>
+            <tr>
+              <th>Tên chất thải</th>
+              <th>Mã CTNH</th>
+              <th>KL 2023</th>
+              <th>KL 2024</th>
+              <th>KL 6T 2025</th>
+              <th>Phương pháp xử lý</th>
+              <th>Đơn vị tiếp nhận</th>
+            </tr>
+          </thead>
+          <tbody id="tableC">
+            <tr>
+              <td><input type="text" name="c_name[]"></td>
+              <td><input type="text" name="c_code[]"></td>
+              <td><input type="number" name="c_2023[]"></td>
+              <td><input type="number" name="c_2024[]"></td>
+              <td><input type="number" name="c_2025[]"></td>
+              <td><input type="text" name="c_method[]"></td>
+              <td><input type="text" name="c_unit[]"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="addRowBtn" data-target="tableC">+ Thêm dòng</button>
+
+        <h3>Thông tin liên hệ</h3>
+        <label>Người liên hệ</label>
+        <input type="text" name="contact_name">
+
+        <label>Số điện thoại liên hệ</label>
+        <input type="text" name="contact_phone">
+      </div>
+
+      <!-- Nút điều hướng -->
+      <div id="autoNav">
+        <button type="button" id="prevBtn">◀ Quay lại</button>
+        <button type="button" id="nextBtn">Tiếp theo ▶</button>
+        <button type="submit" id="submitBtn" style="display:none;">Gửi khảo sát</button>
+      </div>
     </form>
   </div>
 
-  <!-- JS -->
   <script src="app.js"></script>
 </body>
 </html>
